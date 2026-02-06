@@ -4,10 +4,10 @@ import path from "path";
 
 export default defineEventHandler(async (event) => {
   try {
-    const templatesDir = path.join(process.cwd(), "templates");
+    const templatesDir = path.join(process.cwd(), "/public/templates");
 
     // Ищем файл каталога
-    const catalogFiles = ["каталог_товаров.doc", "catalog.doc", "каталог.doc"];
+    const catalogFiles = ["catalog.doc"];
     let catalogPath = "";
     let catalogName = "";
 
