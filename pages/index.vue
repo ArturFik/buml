@@ -315,34 +315,44 @@ const showMessage = (text, type) => {
 // Скачивание файлов через API
 const downloadFile = async (type) => {
   try {
-    const response = await fetch(`/api/download/${type}`);
+    // Прямые ссылки на файлы в public/templates
+    const files = {
+      template: {
+        url: "/templates/template.doc",
+        name: "шаблон_заказа.doc",
+      },
+      catalog: {
+        url: "/templates/catalog.doc",
+        name: "каталог_товаров.doc",
+      },
+    };
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || "Ошибка скачивания");
-    }
+    const file = files[type];
 
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
+    // Метод 1: Создаём скрытую ссылку
+    const link = document.createElement("a");
+    link.href = file.url;
+    link.download = file.name;
+    link.style.display = "none";
 
-    // Используем .doc расширение
-    if (type === "template") {
-      a.download = "template.doc";
-    } else {
-      a.download = "catalog.doc";
-    }
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-
-    showMessage("Файл начал скачивание", "success");
+    showMessage(`Файл "${file.name}" начал скачивание`, "success");
   } catch (error) {
     console.error("Download error:", error);
-    showMessage(error.message || "Ошибка при скачивании файла", "error");
+
+    // Если не скачалось, показываем прямую ссылку
+    const downloadUrl =
+      type === "template"
+        ? "/templates/template.doc"
+        : "/templates/catalog.doc";
+
+    showMessage(
+      `Скачайте файл по <a href="${downloadUrl}" target="_blank" style="color: #1e40af; text-decoration: underline;">этой ссылке</a>`,
+      "success"
+    );
   }
 };
 
