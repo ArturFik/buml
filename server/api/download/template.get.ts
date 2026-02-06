@@ -1,48 +1,42 @@
 import { defineEventHandler } from "h3";
-import fs from "fs";
-import path from "path";
+import { readFile } from "fs/promises";
+import { join } from "path";
 
 export default defineEventHandler(async (event) => {
   try {
-    const templatesDir = path.join(process.cwd(), "public/templates/");
+    // На Vercel нужно использовать process.cwd() с путем к public
+    const filePath = join(process.cwd(), "public", "templates", "template.doc");
 
-    // Ищем файл шаблона
-    const templateFiles = ["template.doc"];
-    let templatePath = "";
-
-    for (const file of templateFiles) {
-      const testPath = path.join(templatesDir, file);
-      if (fs.existsSync(testPath)) {
-        templatePath = testPath;
-        break;
-      }
-    }
-
-    if (!templatePath) {
+    // Проверяем, существует ли файл
+    const fs = await import("fs");
+    if (!fs.existsSync(filePath)) {
+      // Альтернатива: отдаем ссылку для скачивания
       return {
-        status: 404,
-        body: { error: "Файл шаблона не найден" },
+        status: 200,
+        body: {
+          downloadUrl: "/templates/template.doc",
+          message: "Скачайте файл по ссылке",
+        },
       };
     }
 
-    const fileBuffer = fs.readFileSync(templatePath);
+    const fileBuffer = await readFile(filePath);
 
-    // Используем английское имя для заголовка
     event.res.setHeader(
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     );
     event.res.setHeader(
       "Content-Disposition",
-      'attachment; filename="template.doc"'
+      'attachment; filename="template.xlsx"'
     );
 
     return fileBuffer;
   } catch (error) {
     console.error("Error serving template:", error);
     return {
-      status: 500,
-      body: { error: "Ошибка при скачивании шаблона" },
+      status: 404,
+      body: { error: "Файл шаблона не найден" },
     };
   }
 });
