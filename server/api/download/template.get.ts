@@ -4,7 +4,7 @@ import path from "path";
 
 export default defineEventHandler(async (event) => {
   try {
-    const templatesDir = path.join(process.cwd(), "/public/templates/");
+    const templatesDir = path.join(process.cwd(), "public/templates/");
 
     // Ищем файл шаблона
     const templateFiles = ["template.doc"];

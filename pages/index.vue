@@ -283,7 +283,7 @@ const triggerFileInput = () => {
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (file) {
-    const validTypes = [".xlsx", ".xls"];
+    const validTypes = [".doc", ".doc"];
     const fileExtension = "." + file.name.split(".").pop().toLowerCase();
 
     if (!validTypes.includes(fileExtension)) {
