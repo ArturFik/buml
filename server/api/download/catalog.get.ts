@@ -4,32 +4,34 @@ import path from "path";
 
 export default defineEventHandler(async (event) => {
   try {
-    const templatesDir = path.join(process.cwd(), "public/templates");
+    // Пробуем разные пути
+    const possiblePaths = [
+      path.join(process.cwd(), "public", "templates", "catalog.doc"),
+      path.join(process.cwd(), ".output", "public", "templates", "catalog.doc"),
+      path.join(process.cwd(), "templates", "catalog.doc"),
+      "/tmp/templates/catalog.doc", // для Vercel
+    ];
 
-    // Ищем файл каталога
-    const catalogFiles = ["catalog.doc"];
-    let catalogPath = "";
-    let catalogName = "";
+    let filePath = "";
 
-    for (const file of catalogFiles) {
-      const testPath = path.join(templatesDir, file);
-      if (fs.existsSync(testPath)) {
-        catalogPath = testPath;
-        catalogName = file;
+    for (const p of possiblePaths) {
+      if (fs.existsSync(p)) {
+        filePath = p;
+        console.log("Найден файл по пути:", p);
         break;
       }
     }
 
-    if (!catalogPath) {
+    if (!filePath) {
+      console.log("Файл не найден по путям:", possiblePaths);
       return {
         status: 404,
         body: { error: "Файл каталога не найден" },
       };
     }
 
-    const fileBuffer = fs.readFileSync(catalogPath);
+    const fileBuffer = fs.readFileSync(filePath);
 
-    // Используем английское имя для заголовка (без русских букв)
     event.res.setHeader("Content-Type", "application/msword");
     event.res.setHeader(
       "Content-Disposition",

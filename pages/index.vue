@@ -327,6 +327,7 @@ const downloadFile = async (type) => {
     const a = document.createElement("a");
     a.href = url;
 
+    // Используем .doc расширение
     if (type === "template") {
       a.download = "template.doc";
     } else {
