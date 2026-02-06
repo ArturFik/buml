@@ -315,7 +315,6 @@ const showMessage = (text, type) => {
 // Скачивание файлов через API
 const downloadFile = async (type) => {
   try {
-    // Прямые ссылки на файлы в public/templates
     const files = {
       template: {
         url: "/templates/template.doc",
@@ -462,7 +461,7 @@ onUnmounted(() => {
 
 body {
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-  background: #f8fafc;
+  background-color: rgb(220, 246, 255);
   color: #1e293b;
   line-height: 1.6;
 }
@@ -478,7 +477,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 0;
+  padding: 15px 15px;
   border-bottom: 1px solid #e2e8f0;
   background: white;
   position: sticky;
@@ -487,9 +486,12 @@ body {
 }
 
 .logo {
-  height: 50px;
+  height: 75px;
   width: auto;
   margin-left: 20px;
+  @media (max-width: 768px) {
+    height: 50px;
+  }
 }
 
 .header-right {
@@ -629,7 +631,7 @@ body {
   }
 
   .header {
-    padding: 10px 0;
+    padding: 10px 10px;
   }
 
   .header-phone {
@@ -848,11 +850,6 @@ body {
   }
 }
 
-/* Контакты */
-.contacts-section {
-  background: white;
-}
-
 .contacts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -863,7 +860,7 @@ body {
 }
 
 .contact-card {
-  background: #f1f5f9;
+  background: #ffffff;
   padding: 25px;
   border-radius: 10px;
   border-left: 4px solid #1e40af;
@@ -882,11 +879,6 @@ body {
 
 .contact-card strong {
   color: #334155;
-}
-
-/* Заказ */
-.order-section {
-  background: #f8fafc;
 }
 
 .order-steps {
